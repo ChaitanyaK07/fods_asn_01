@@ -49,7 +49,7 @@ too_large    eta = 2.1  : E(0) = 2.3807e+00, E(10) = 1.6016e+01, E(50) = 3.2807e
   Divergent run (eta = 2.1) after 100 epochs:
   E = 4.521056e+08
   w = [-2.329479e+03, -2.930735e+05,  5.698342e+06, -5.219706e+07,  2.423629e+08, -6.284282e+08,  9.564353e+08, -8.489599e+08,  4.060740e+08, -8.069080e+07]
-  ||w||_2 = 1.504436e+09(closed form ||w||_2 = 1.091784e+05)
+  ||w||_2 = 1.504436e+09  (closed form ||w||_2 = 1.091784e+05)
   ||w - w_closed||_2 = 1.504545e+09
   E grows by a factor (1 - eta)^2 = 1.2100 per epoch: E(100)/E(99) = 1.2100
 Boundary eta = 2: E stays at E(0) = 2.380690e+00 for all epochs (min/max over 100 epochs: 2.380690e+00 / 2.380690e+00).

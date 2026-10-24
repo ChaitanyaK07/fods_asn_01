@@ -1,0 +1,87 @@
+
+P2: Ridge Regression as a MAP Estimate
+======================================
+Train: poly_train.csv (N = 10); Test: poly_test.csv (N = 100)
+d = 9; lambda grid: np.logspace(-10, 2, 49)
+RMSE = sqrt(mean squared error) on the given set.
+
+Deliverable 1: closed-form ridge solution
+-----------------------------------------
+      lambda   train RMSE    test RMSE        ||w||_2
+  1.0000e-10     0.016486     0.160517   3.979222e+03
+  1.7783e-10     0.019165     0.155693   2.934151e+03
+  3.1623e-10     0.021496     0.151804   2.129850e+03
+  5.6234e-10     0.023257     0.148756   1.618340e+03
+  1.0000e-09     0.024513     0.146101   1.340513e+03
+  1.7783e-09     0.025521     0.143271   1.188632e+03
+  3.1623e-09     0.026701     0.139731   1.074567e+03
+  5.6234e-09     0.028662     0.135154   9.495900e+02
+  1.0000e-08     0.032020     0.129703   7.961520e+02
+  1.7783e-08     0.036847     0.124179   6.211454e+02
+  3.1623e-08     0.042353     0.119629   4.480981e+02
+  5.6234e-08     0.047422     0.116628   3.017334e+02
+  1.0000e-07     0.051365     0.115069   1.943603e+02
+  1.7783e-07     0.054097     0.114577   1.244946e+02
+  3.1623e-07     0.055885     0.114866   8.327583e+01
+  5.6234e-07     0.057084     0.115789   6.022348e+01
+  1.0000e-06     0.058005     0.117223   4.672087e+01
+  1.7783e-06     0.058843     0.118929   3.791481e+01
+  3.1623e-06     0.059647     0.120538   3.208620e+01
+  5.6234e-06     0.060381     0.121688   2.857502e+01
+  1.0000e-05     0.061050     0.122172   2.657992e+01
+  1.7783e-05     0.061784     0.121968   2.527342e+01
+  3.1623e-05     0.062858     0.121239   2.414260e+01
+  5.6234e-05     0.064643     0.120348   2.301203e+01
+  1.0000e-04     0.067577     0.119857   2.187284e+01
+  1.7783e-04     0.072509     0.120610   2.067486e+01
+  3.1623e-04     0.081537     0.124147   1.923776e+01
+  5.6234e-04     0.098221     0.133247   1.733677e+01
+  1.0000e-03     0.125329     0.151074   1.486964e+01
+  1.7783e-03     0.161431     0.178013   1.200120e+01
+  3.1623e-03     0.200683     0.209757   9.157412e+00
+  5.6234e-03     0.236573     0.240241   6.792317e+00
+  1.0000e-02     0.265922     0.266026   5.107943e+00
+  1.7783e-02     0.289717     0.287554   3.999516e+00
+  3.1623e-02     0.311034     0.307405   3.244677e+00
+  5.6234e-02     0.332483     0.328033   2.688372e+00
+  1.0000e-01     0.355781     0.351314   2.253634e+00
+  1.7783e-01     0.383634     0.379993   1.880439e+00
+  3.1623e-01     0.419970     0.417588   1.519668e+00
+  5.6234e-01     0.465719     0.464598   1.161003e+00
+  1.0000e+00     0.515366     0.515765   8.320864e-01
+  1.7783e+00     0.560691     0.563608   5.657482e-01
+  3.1623e+00     0.596912     0.603673   3.728472e-01
+  5.6234e+00     0.623892     0.635315   2.425200e-01
+  1.0000e+01     0.643598     0.659540   1.568130e-01
+  1.7783e+01     0.658021     0.677584   1.006015e-01
+  3.1623e+01     0.668591     0.690632   6.356056e-02
+  5.6234e+01     0.676205     0.699744   3.922998e-02
+  1.0000e+02     0.681460     0.705832   2.358688e-02
+
+Deliverable 2: batch GD at lambda = 0.01, eta = 0.04, w0 = 0
+------------------------------------------------------------
+Iterations to reach ||w_GD - w_closed|| / ||w_closed|| < 1e-06: 28227
+Final relative error = 9.9968e-07
+w_closed = [ 5.295647e-01,  1.395493e+00, -3.678810e+00, -2.302177e+00, -4.165208e-01,  7.890615e-01,  1.286546e+00,  1.267290e+00,  9.152688e-01,  3.667816e-01]
+w_GD     = [ 5.295648e-01,  1.395491e+00, -3.678808e+00, -2.302175e+00, -4.165216e-01,  7.890595e-01,  1.286544e+00,  1.267289e+00,  9.152694e-01,  3.667842e-01]
+E~(w_closed) = 0.4840277721
+E~(w_GD)     = 0.4840277721
+cond(Phi^T Phi)            = 2.3097e+14
+cond(Phi^T Phi + lambda I) = 2.0381e+03
+Eigenvalues of Phi^T Phi + lambda I: min = 1.0000e-02, max = 2.0381e+01 (stability requires eta < 2/max = 0.0981; eta = 0.04)
+The penalty lifts every eigenvalue of Phi^T Phi by lambda = 0.01, which raises the near-zero smallest eigenvalue to about lambda and cuts the condition number from 2.3e+14 to 2.0e+03 (about 1e+11 times smaller), making plain GD practical.
+
+Deliverable 3: RMSE sweep and lambda*
+-------------------------------------
+lambda* = 1.7783e-07
+test RMSE at lambda* = 0.114577
+1.05 x min test RMSE = 0.120306
+interval: [3.1623e-08, 1.7783e-06]
+  note: lambda = 1.0000e-04 also passes (test RMSE 0.119857), but is separated from the interval
+The minimum is flat: test RMSE stays within 5% of its minimum for almost two decades of lambda, so the exact choice inside this interval hardly matters. To the left the penalty is too weak and the degree-9 polynomial overfits (train RMSE near 0, test RMSE rising), while to the right the penalty shrinks the weights too much and the fit underfits (train and test RMSE both rise together).
+
+Deliverable 4: fitted curves
+----------------------------
+overfit: lambda = 1.0000e-10, ||w||_2 = 3.979222e+03
+lambda*: lambda = 1.7783e-07, ||w||_2 = 1.244946e+02
+underfit: lambda = 1.0000e-02, ||w||_2 = 5.107943e+00

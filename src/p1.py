@@ -64,8 +64,8 @@ def minibatch_gd(q, t, eta, epochs, batch = batch_size, seed=SEED):
 
     for _ in range(epochs):
         order = rng.permutation(N)
-        for start in range(0, N, batch_size):
-            indx = order[start:start + batch_size]
+        for start in range(0, N, batch):
+            indx = order[start:start + batch]
             qb, tb = q[indx], t[indx]
             grad = qb.T @ (qb @ alpha - tb) / len(indx)
             alpha = alpha - eta*grad
@@ -119,15 +119,15 @@ def run(out_dir = OUTPUT_DIR/"P1"):
     d = D_MAX
     phi = design_matrix(x, d)
     wc = w_closed[d]
-    Q, R = np.linalg.qr(Phi, mode="reduced")   # thin QR, Phi = Q R
+    Q, R = np.linalg.qr(phi, mode="reduced")   # thin QR, Phi = Q R
     rep.section("Setup for d = 9 gradient descent (thin QR, alpha = R w)")
-    rep.line(f"cond(Phi) = {np.linalg.cond(Phi):.4e}")
+    rep.line(f"cond(Phi) = {np.linalg.cond(phi):.4e}")
     rep.line(f"cond(Q)   = {np.linalg.cond(Q):.6f}")
     rep.line(f"Q shape = {Q.shape};  ||Q^T Q - I||_F = {np.linalg.norm(Q.T @ Q - np.eye(d + 1)):.3e};"
                  f"  ||Q Q^T - I||_F = {np.linalg.norm(Q @ Q.T - np.eye(N)):.3e}")
     rep.line(f"Row norms of Q: {np.array2string(np.linalg.norm(Q, axis=1), precision=6)}")
     rep.line("Starting point alpha = 0 for every variant.")
-    rep.line(f"Closed-form E(w_closed) (d=9) = {sse(Phi, wc, t):.6e}")
+    rep.line(f"Closed-form E(w_closed) (d=9) = {sse(phi, wc, t):.6e}")
 
     # deliverable 2 : implementing family of grad_desc for d = 9
 
@@ -176,7 +176,7 @@ def run(out_dir = OUTPUT_DIR/"P1"):
             rep.line(f"  Divergent run (eta = {eta}) after {epoch_study} epochs:")
             rep.line(f"  E = {h[-1]:.6e}")
             rep.array("  w", w_div)
-            rep.line(f"  ||w||_2 = {np.linalg.norm(w_div):.6e}"
+            rep.line(f"  ||w||_2 = {np.linalg.norm(w_div):.6e}  "
                          f"(closed form ||w||_2 = {np.linalg.norm(wc):.6e})")
             rep.line(f"  ||w - w_closed||_2 = {np.linalg.norm(w_div - wc):.6e}")
             rep.line(f"  E grows by a factor (1 - eta)^2 = {(1 - eta) ** 2:.4f} per epoch: "

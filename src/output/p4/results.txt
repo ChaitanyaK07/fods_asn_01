@@ -1,0 +1,34 @@
+
+P4: Bayesian Regression - MAP/Ridge Equivalence and Effect of N
+===============================================================
+VAR = 0.01, beta = 100, alpha = 0.05, lambda = alpha/beta = 0.0005, degree = 3, grid = 200 points on [0, 1]
+
+Deliverable 1: predictive distribution, p4_train_N10.csv
+--------------------------------------------------------
+m_N = [ 9.383688e-02,  7.367889e+00, -2.280935e+01,  1.524700e+01]
+S_N =
+    7.532116e-03  -4.689794e-02   8.194146e-02  -4.289319e-02
+   -4.689794e-02   5.400794e-01  -1.212918e+00   7.330609e-01
+    8.194146e-02  -1.212918e+00   3.038445e+00  -1.960449e+00
+   -4.289319e-02   7.330609e-01  -1.960449e+00   1.318149e+00
+predictive std s(x): min = 0.11078, max = 0.13377; 95% band half-width 1.96 s(x): min = 0.21713, max = 0.26219
+
+Deliverable 2: MAP / ridge equivalence
+--------------------------------------
+w_MAP = [ 9.383688e-02,  7.367889e+00, -2.280935e+01,  1.524700e+01]
+||w_MAP - m_N||_2 = 1.1276e-12
+max_x |w_MAP^T phi(x) - m(x)| over the grid = 3.4750e-14
+Both are the same vector analytically: beta (alpha I + beta Phi^T Phi)^{-1} Phi^T t = (Phi^T Phi + (alpha/beta) I)^{-1} Phi^T t; the difference is floating-point round-off.
+
+Deliverable 3: predictive interval width 2 * 1.96 * s(x) vs N
+-------------------------------------------------------------
+Irreducible-noise floor 2 * 1.96 * beta^(-1/2) = 0.39200
+   N  min width  mean width  max width  mean param var  mean width - floor
+   5    0.47691     0.49519    0.54942    5.968442e-03             0.10319
+  10    0.43426     0.44908    0.52438    3.143484e-03             0.05708
+  20    0.41346     0.42418    0.48634    1.723240e-03             0.03218
+  50    0.40071     0.40638    0.44167    7.514819e-04             0.01438
+
+Deliverable 4: discussion
+-------------------------
+Each new observation adds beta phi(x_n) phi(x_n)^T to the posterior precision S_N^{-1} = alpha I + beta Phi^T Phi, so with more data the precision grows (roughly in proportion to N) and the posterior covariance S_N shrinks; the parameter-uncertainty term phi(x)^T S_N phi(x) therefore falls towards zero, which is why the band in p4_3_width_vs_N.png narrows from a mean width of 0.495 at N = 5 to 0.406 at N = 50 (and is widest where data are sparse, near the ends of [0, 1]). The observation-noise term beta^{-1} does not depend on the data at all -- it is the variance of the noise on a new target -- so the width can only approach the floor 2 x 1.96 x beta^(-1/2) = 0.392, never go below it, however large N becomes.

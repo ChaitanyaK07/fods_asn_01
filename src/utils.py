@@ -40,7 +40,7 @@ def design_matrix(x, d):
     return phi
 
 
-'''def legendre_design(x, d):
+def legendre_design(x, d):
     """Phi_{nj} = P_j(2 x_n - 1), j = 0..d, built from the recurrence
     (j+1) P_{j+1}(u) = (2j+1) u P_j(u) - j P_{j-1}(u),  P_0 = 1, P_1 = u.
     """
@@ -51,7 +51,7 @@ def design_matrix(x, d):
         Phi[:, 1] = u
     for j in range(1, d):
         Phi[:, j + 1] = ((2 * j + 1) * u * Phi[:, j] - j * Phi[:, j - 1]) / (j + 1)
-    return Phi '''
+    return Phi
 
 
 
