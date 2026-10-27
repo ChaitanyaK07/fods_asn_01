@@ -1,0 +1,291 @@
+
+prob:1, polynomial regression : closed form vs family of gradient_descent
+=========================================================================
+Training set: poly_train.csv, N = 10
+
+Deliverable 1: closed-form fits, d = 1..9
+-----------------------------------------
+d = 1: E(w) = 1.386903e+00, cond(Phi) = 3.985e+00
+   w (d=1) = [ 7.057788e-01, -1.396745e+00]
+d = 2: E(w) = 1.373940e+00, cond(Phi) = 1.920e+01
+   w (d=2) = [ 7.898654e-01, -1.964330e+00,  5.675843e-01]
+d = 3: E(w) = 8.443037e-02, cond(Phi) = 9.903e+01
+   w (d=3) = [ 6.169509e-02,  1.002447e+01, -3.102980e+01,  2.106493e+01]
+d = 4: E(w) = 8.082228e-02, cond(Phi) = 5.414e+02
+   w (d=4) = [ 9.028702e-02,  8.952277e+00, -2.561521e+01,  1.238013e+01,  4.342399e+00]
+d = 5: E(w) = 1.655523e-02, cond(Phi) = 3.170e+03
+   w (d=5) = [ 1.673087e-01,  1.935599e+00,  3.287315e+01, -1.529470e+02,  1.938447e+02, -7.580091e+01]
+d = 6: E(w) = 1.610836e-02, cond(Phi) = 2.027e+04
+   w (d=6) = [ 1.638177e-01,  2.867183e+00,  2.137996e+01, -1.034792e+02,  9.824940e+01,  9.232758e+00, -2.834456e+01]
+d = 7: E(w) = 6.274067e-03, cond(Phi) = 1.463e+05
+   w (d=7) = [ 1.712077e-01, -5.124551e+00,  1.532498e+02, -8.854825e+02,  2.309412e+03, -3.215286e+03,  2.311710e+03, -6.685869e+02]
+d = 8: E(w) = 3.093784e-04, cond(Phi) = 1.266e+06
+   w (d=8) = [ 1.691654e-01,  9.491732e+00, -1.415085e+02,  1.337755e+03, -6.077630e+03,  1.424573e+04, -1.805948e+04,  1.180357e+04, -3.118038e+03]
+d = 9: E(w) = 4.259194e-23, cond(Phi) = 1.519e+07
+   w (d=9) = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+03, -1.758851e+04,  4.560565e+04, -6.940945e+04,  6.160985e+04, -2.946919e+04,  5.855811e+03]
+
+Setup for d = 9 gradient descent (thin QR, alpha = R w)
+-------------------------------------------------------
+cond(Phi) = 1.5193e+07
+cond(Q)   = 1.000000
+Q shape = (10, 10);  ||Q^T Q - I||_F = 1.210e-15;  ||Q Q^T - I||_F = 1.195e-15
+Row norms of Q: [1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
+Starting point alpha = 0 for every variant.
+Closed-form E(w_closed) (d=9) = 4.259194e-23
+
+Deliverables 2-3: Batch / SGD / Mini-batch (size 3) GD, eta = 0.1, 2000 epochs
+------------------------------------------------------------------------------
+Updates per epoch: Batch = 1, SGD = N = 10, Mini-batch = 4 (batches 3,3,3,1).
+Batch GD               E at ep0: 2.381e+00, ep10: 2.894e-01, ep50: 6.323e-05, ep100: 1.680e-09, ep200: 1.185e-18, ep500: 9.790e-31, ep1000: 9.790e-31, ep1500: 9.790e-31, ep2000: 9.790e-31
+Stochastic GD          E at ep0: 2.381e+00, ep10: 2.894e-01, ep50: 6.323e-05, ep100: 1.680e-09, ep200: 1.185e-18, ep500: 1.389e-29, ep1000: 1.418e-29, ep1500: 1.437e-29, ep2000: 1.368e-29
+Mini-batch GD (for b=3) E at ep0: 2.381e+00, ep10: 1.030e+00, ep50: 4.366e-02, ep100: 9.027e-04, ep200: 2.731e-07, ep500: 6.621e-18, ep1000: 1.679e-29, ep1500: 1.427e-29, ep2000: 1.391e-29
+max |E_SGD - E_Batch| over all epochs = 2.220e-16
+
+Deliverable 4: learning-rate study, Batch GD, 100 epochs
+--------------------------------------------------------
+too_small    eta = 0.01 : E(0) = 2.3807e+00, E(10) = 1.9472e+00, E(50) = 8.7141e-01, E(100) = 3.1896e-01
+well_chosen  eta = 0.5  : E(0) = 2.3807e+00, E(10) = 2.2704e-06, E(50) = 1.7940e-30, E(100) = 6.9333e-33
+too_large    eta = 2.1  : E(0) = 2.3807e+00, E(10) = 1.6016e+01, E(50) = 3.2807e+04, E(100) = 4.5211e+08
+  Divergent run (eta = 2.1) after 100 epochs:
+  E = 4.521056e+08
+  w = [-2.329479e+03, -2.930735e+05,  5.698342e+06, -5.219706e+07,  2.423629e+08, -6.284282e+08,  9.564353e+08, -8.489599e+08,  4.060740e+08, -8.069080e+07]
+  ||w||_2 = 1.504436e+09  (closed form ||w||_2 = 1.091784e+05)
+  ||w - w_closed||_2 = 1.504545e+09
+  E grows by a factor (1 - eta)^2 = 1.2100 per epoch: E(100)/E(99) = 1.2100
+Boundary eta = 2: E stays at E(0) = 2.380690e+00 for all epochs (min/max over 100 epochs: 2.380690e+00 / 2.380690e+00).
+  Since Q^T Q = I, alpha_(k+1) - alpha* = (1 - eta)(alpha_k - alpha*) = -(alpha_k - alpha*): the iterate jumps between alpha = 0 and alpha = 2 alpha*; ||alpha_1 - 2 alpha*|| = 0.000e+00. It neither converges nor diverges.
+
+Deliverable 5: verification after 2000 epochs at eta = 0.1
+----------------------------------------------------------
+w_closed = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+03, -1.758851e+04,  4.560565e+04, -6.940945e+04,  6.160985e+04, -2.946919e+04,  5.855811e+03]
+||w_closed||_2 = 1.091784e+05
+w_GD [Batch GD] = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+03, -1.758851e+04,  4.560565e+04, -6.940945e+04,  6.160985e+04, -2.946919e+04,  5.855811e+03]
+Batch GD               ||w_GD - w_closed||_2 = 2.127780e-06,  relative = 1.948902e-11
+w_GD [Stochastic GD] = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+03, -1.758851e+04,  4.560565e+04, -6.940945e+04,  6.160985e+04, -2.946919e+04,  5.855811e+03]
+Stochastic GD          ||w_GD - w_closed||_2 = 2.128341e-06,  relative = 1.949416e-11
+w_GD [Mini-batch GD (for b=3)] = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+03, -1.758851e+04,  4.560565e+04, -6.940945e+04,  6.160985e+04, -2.946919e+04,  5.855811e+03]
+Mini-batch GD (for b=3) ||w_GD - w_closed||_2 = 2.128680e-06,  relative = 1.949727e-11
+
+observations: 
+--------------
+in the figure, stochastic and batch gd converge almost the same until a level, whereas mini-batch gd converged slowly occurs because the rows of the orthogonal matrix (Q) have equal norms and are mutually orthogonal so each sample touches an independent direction, causing each SGD update to produce the same effect as the corresponding Batch GD updatebut, in mini-batch gd, it averaged the update, therefore the convergence in slow.
+
+
+
+P2: Ridge Regression as a MAP Estimate
+======================================
+Train: poly_train.csv (N = 10); Test: poly_test.csv (N = 100)
+d = 9; lambda grid: np.logspace(-10, 2, 49)
+RMSE = sqrt(mean squared error) on the given set.
+
+Deliverable 1: closed-form ridge solution
+-----------------------------------------
+      lambda   train RMSE    test RMSE        ||w||_2
+  1.0000e-10     0.016486     0.160517   3.979222e+03
+  1.7783e-10     0.019165     0.155693   2.934151e+03
+  3.1623e-10     0.021496     0.151804   2.129850e+03
+  5.6234e-10     0.023257     0.148756   1.618340e+03
+  1.0000e-09     0.024513     0.146101   1.340513e+03
+  1.7783e-09     0.025521     0.143271   1.188632e+03
+  3.1623e-09     0.026701     0.139731   1.074567e+03
+  5.6234e-09     0.028662     0.135154   9.495900e+02
+  1.0000e-08     0.032020     0.129703   7.961520e+02
+  1.7783e-08     0.036847     0.124179   6.211454e+02
+  3.1623e-08     0.042353     0.119629   4.480981e+02
+  5.6234e-08     0.047422     0.116628   3.017334e+02
+  1.0000e-07     0.051365     0.115069   1.943603e+02
+  1.7783e-07     0.054097     0.114577   1.244946e+02
+  3.1623e-07     0.055885     0.114866   8.327583e+01
+  5.6234e-07     0.057084     0.115789   6.022348e+01
+  1.0000e-06     0.058005     0.117223   4.672087e+01
+  1.7783e-06     0.058843     0.118929   3.791481e+01
+  3.1623e-06     0.059647     0.120538   3.208620e+01
+  5.6234e-06     0.060381     0.121688   2.857502e+01
+  1.0000e-05     0.061050     0.122172   2.657992e+01
+  1.7783e-05     0.061784     0.121968   2.527342e+01
+  3.1623e-05     0.062858     0.121239   2.414260e+01
+  5.6234e-05     0.064643     0.120348   2.301203e+01
+  1.0000e-04     0.067577     0.119857   2.187284e+01
+  1.7783e-04     0.072509     0.120610   2.067486e+01
+  3.1623e-04     0.081537     0.124147   1.923776e+01
+  5.6234e-04     0.098221     0.133247   1.733677e+01
+  1.0000e-03     0.125329     0.151074   1.486964e+01
+  1.7783e-03     0.161431     0.178013   1.200120e+01
+  3.1623e-03     0.200683     0.209757   9.157412e+00
+  5.6234e-03     0.236573     0.240241   6.792317e+00
+  1.0000e-02     0.265922     0.266026   5.107943e+00
+  1.7783e-02     0.289717     0.287554   3.999516e+00
+  3.1623e-02     0.311034     0.307405   3.244677e+00
+  5.6234e-02     0.332483     0.328033   2.688372e+00
+  1.0000e-01     0.355781     0.351314   2.253634e+00
+  1.7783e-01     0.383634     0.379993   1.880439e+00
+  3.1623e-01     0.419970     0.417588   1.519668e+00
+  5.6234e-01     0.465719     0.464598   1.161003e+00
+  1.0000e+00     0.515366     0.515765   8.320864e-01
+  1.7783e+00     0.560691     0.563608   5.657482e-01
+  3.1623e+00     0.596912     0.603673   3.728472e-01
+  5.6234e+00     0.623892     0.635315   2.425200e-01
+  1.0000e+01     0.643598     0.659540   1.568130e-01
+  1.7783e+01     0.658021     0.677584   1.006015e-01
+  3.1623e+01     0.668591     0.690632   6.356056e-02
+  5.6234e+01     0.676205     0.699744   3.922998e-02
+  1.0000e+02     0.681460     0.705832   2.358688e-02
+
+Deliverable 2: batch GD at lambda = 0.01, eta = 0.04, w0 = 0
+------------------------------------------------------------
+Iterations to reach ||w_GD - w_closed|| / ||w_closed|| < 1e-06: 28227
+Final relative error = 9.9968e-07
+w_closed = [ 5.295647e-01,  1.395493e+00, -3.678810e+00, -2.302177e+00, -4.165208e-01,  7.890615e-01,  1.286546e+00,  1.267290e+00,  9.152688e-01,  3.667816e-01]
+w_GD     = [ 5.295648e-01,  1.395491e+00, -3.678808e+00, -2.302175e+00, -4.165216e-01,  7.890595e-01,  1.286544e+00,  1.267289e+00,  9.152694e-01,  3.667842e-01]
+E~(w_closed) = 0.4840277721
+E~(w_GD)     = 0.4840277721
+cond(Phi^T Phi)            = 2.3097e+14
+cond(Phi^T Phi + lambda I) = 2.0381e+03
+Eigenvalues of Phi^T Phi + lambda I: min = 1.0000e-02, max = 2.0381e+01 (stability requires eta < 2/max = 0.0981; eta = 0.04)
+The penalty lifts every eigenvalue of Phi^T Phi by lambda = 0.01, which raises the near-zero smallest eigenvalue to about lambda and cuts the condition number from 2.3e+14 to 2.0e+03 (about 1e+11 times smaller), making plain GD practical.
+
+Deliverable 3: RMSE sweep and lambda*
+-------------------------------------
+lambda* = 1.7783e-07
+test RMSE at lambda* = 0.114577
+1.05 x min test RMSE = 0.120306
+interval: [3.1623e-08, 1.7783e-06]
+  note: lambda = 1.0000e-04 also passes (test RMSE 0.119857), but is separated from the interval
+The minimum is flat: test RMSE stays within 5% of its minimum for almost two decades of lambda, so the exact choice inside this interval hardly matters. To the left the penalty is too weak and the degree-9 polynomial overfits (train RMSE near 0, test RMSE rising), while to the right the penalty shrinks the weights too much and the fit underfits (train and test RMSE both rise together).
+
+Deliverable 4: fitted curves
+----------------------------
+overfit: lambda = 1.0000e-10, ||w||_2 = 3.979222e+03
+lambda*: lambda = 1.7783e-07, ||w||_2 = 1.244946e+02
+underfit: lambda = 1.0000e-02, ||w||_2 = 5.107943e+00
+
+
+
+P3: L1-Regularised Regression via Subgradient Descent
+=====================================================
+Train: poly_train.csv (N = 10); Test: poly_test.csv (N = 100)
+  max |Phi - np.polynomial.legendre.legvander(2x-1, 9)| = 3.33e-16
+  cond(Phi^T Phi) = 6.1123e+02
+eta = 0.05, w0 = 0, 20000 iterations per lambda
+
+Deliverable 1: convergence and verification at lambda = 0.1
+-----------------------------------------------------------
+(a) E(final iterate) = 0.263570
+final w = [-0.00595, -0.92957,  0.04313,  1.11472,  0.03035, -0.20250, -0.00159, -0.02511,  0.00178,  0.00053]
+(b) ~0 threshold 2*eta*lambda = 0.0100;  ~0 indices: [0, 6, 8, 9];  non-zero indices: [1, 2, 3, 4, 5, 7]
+    Phi_j^T r = [ 0.04310, -0.09401,  0.11332,  0.10544,  0.11436, -0.09500,  0.06830, -0.09520,  0.05601,  0.05286]
+    max |Phi_j^T r - lambda sign(w_j)| over non-zero coefficients = 1.4358e-02
+    max |Phi_j^T r| / lambda over ~0 coefficients               = 0.6830  (<= 1: condition satisfied)
+(c) reference E* = 0.2625;  E(final) - E* = 1.0703e-03
+    w* = [ 0.000, -0.928,  0.045,  1.117,  0.032, -0.201,  0.000, -0.026,  0.000,  0.000]
+    w (rounded) = [-0.006, -0.930,  0.043,  1.115,  0.030, -0.203, -0.002, -0.025,  0.002,  0.001]
+    ||w - w*||_2 = 7.6361e-03  (chatter amplitude ~ eta*lambda = 0.005; w* itself is rounded to 3 dp)
+
+Deliverable 2: train / test RMSE vs lambda (Lasso)
+--------------------------------------------------
+Minimum test RMSE 0.098544 at lambda = 1.0000e-01; noise reference 0.1.
+
+Deliverable 3: coefficient path and number of ~0 coefficients
+-------------------------------------------------------------
+     lambda     train      test  #~0  ~0 indices                w0       w1       w2       w3       w4       w5       w6       w7       w8       w9
+ 1.0000e-04   0.00019   0.16866    0  []                    0.0185  -0.9631   0.1819   1.2060   0.1859  -0.2807  -0.0305  -0.1358  -0.2413   0.1191
+ 1.5849e-04   0.00030   0.16843    0  []                    0.0184  -0.9627   0.1816   1.2065   0.1856  -0.2804  -0.0304  -0.1361  -0.2407   0.1183
+ 2.5119e-04   0.00047   0.16808    0  []                    0.0183  -0.9622   0.1811   1.2072   0.1851  -0.2799  -0.0302  -0.1366  -0.2398   0.1170
+ 3.9811e-04   0.00075   0.16752    0  []                    0.0182  -0.9614   0.1804   1.2084   0.1842  -0.2792  -0.0299  -0.1373  -0.2384   0.1150
+ 6.3096e-04   0.00119   0.16666    0  []                    0.0179  -0.9600   0.1792   1.2102   0.1829  -0.2780  -0.0294  -0.1385  -0.2361   0.1118
+ 1.0000e-03   0.00188   0.16532    0  []                    0.0174  -0.9579   0.1773   1.2132   0.1808  -0.2761  -0.0287  -0.1404  -0.2325   0.1068
+ 1.5849e-03   0.00298   0.16330    0  []                    0.0167  -0.9546   0.1743   1.2178   0.1775  -0.2731  -0.0275  -0.1433  -0.2267   0.0989
+ 2.5119e-03   0.00472   0.16033    0  []                    0.0156  -0.9492   0.1695   1.2251   0.1723  -0.2683  -0.0257  -0.1480  -0.2177   0.0862
+ 3.9811e-03   0.00748   0.15628    0  []                    0.0139  -0.9408   0.1620   1.2368   0.1640  -0.2607  -0.0228  -0.1554  -0.2033   0.0662
+ 6.3096e-03   0.01185   0.15161    0  []                    0.0111  -0.9274   0.1500   1.2552   0.1509  -0.2488  -0.0181  -0.1671  -0.1804   0.0345
+ 1.0000e-02   0.01831   0.14582    1  [9]                   0.0067  -0.9133   0.1311   1.2730   0.1301  -0.2355  -0.0108  -0.1778  -0.1443   0.0004
+ 1.5849e-02   0.02704   0.13154    3  [0, 6, 9]             0.0004  -0.9143   0.1022   1.2627   0.0984  -0.2333  -0.0006  -0.1678  -0.0888   0.0000
+ 2.5119e-02   0.03764   0.11857    3  [0, 6, 9]            -0.0018  -0.9159   0.0704   1.2465   0.0637  -0.2298  -0.0009  -0.1520  -0.0214  -0.0004
+ 3.9811e-02   0.04504   0.11042    4  [0, 6, 8, 9]         -0.0013  -0.9187   0.0578   1.2205   0.0490  -0.2246   0.0017  -0.1272  -0.0016   0.0002
+ 6.3096e-02   0.05500   0.10281    4  [0, 6, 8, 9]         -0.0015  -0.9226   0.0520   1.1801   0.0417  -0.2158   0.0011  -0.0880   0.0028   0.0016
+ 1.0000e-01   0.07490   0.09854    4  [0, 6, 8, 9]         -0.0059  -0.9296   0.0431   1.1147   0.0303  -0.2025  -0.0016  -0.0251   0.0018   0.0005
+ 1.5849e-01   0.10122   0.10750    6  [0, 4, 6, 7, 8, 9]   -0.0046  -0.9213   0.0286   1.0463   0.0108  -0.1551   0.0015  -0.0041  -0.0008   0.0022
+ 2.5119e-01   0.13951   0.13578    7  [0, 2, 4, 6, 7, 8, 9] -0.0066  -0.9018   0.0014   0.9501   0.0050  -0.0709   0.0082  -0.0112   0.0017   0.0035
+ 3.9811e-01   0.18265   0.17808    8  [0, 2, 4, 5, 6, 7, 8, 9] -0.0117  -0.8507  -0.0107   0.8394   0.0241  -0.0118   0.0010  -0.0067   0.0131  -0.0134
+ 6.3096e-01   0.23662   0.23424    8  [0, 2, 4, 5, 6, 7, 8, 9] -0.0163  -0.7610  -0.0091   0.7001   0.0013  -0.0415   0.0192  -0.0259   0.0344  -0.0027
+ 1.0000e+00   0.34606   0.34784    8  [0, 2, 4, 5, 6, 7, 8, 9] -0.0298  -0.6079  -0.0313   0.4844   0.0312   0.0193   0.0064  -0.0217   0.0286  -0.0111
+
+Deliverable 4: selection of lambda* (Lasso)
+-------------------------------------------
+lambda* = 1.0000e-01  (grid index 15)
+test RMSE at lambda* = 0.098544;  train RMSE = 0.074897
+~0 threshold at lambda*: 2*eta*lambda* = 1.0000e-02
+number of ~0 coefficients at lambda* = 4;  indices = [0, 6, 8, 9]
+w(lambda*) = [-0.00595, -0.92957,  0.04313,  1.11472,  0.03035, -0.20250, -0.00159, -0.02511,  0.00178,  0.00053]
+
+Deliverable 5: Lasso vs Ridge
+-----------------------------
+Ridge sweep (closed form, linear solve):
+     lambda     train      test   ||w||_2
+ 1.0000e-04   0.00007   0.16899    1.6187
+ 1.5849e-04   0.00011   0.16895    1.6186
+ 2.5119e-04   0.00017   0.16890    1.6183
+ 3.9811e-04   0.00026   0.16882    1.6179
+ 6.3096e-04   0.00042   0.16870    1.6173
+ 1.0000e-03   0.00066   0.16851    1.6163
+ 1.5849e-03   0.00103   0.16822    1.6148
+ 2.5119e-03   0.00160   0.16780    1.6126
+ 3.9811e-03   0.00246   0.16720    1.6092
+ 6.3096e-03   0.00375   0.16635    1.6043
+ 1.0000e-02   0.00566   0.16515    1.5974
+ 1.5849e-02   0.00846   0.16339    1.5877
+ 2.5119e-02   0.01258   0.16073    1.5743
+ 3.9811e-02   0.01866   0.15680    1.5555
+ 6.3096e-02   0.02766   0.15155    1.5291
+ 1.0000e-01   0.04088   0.14586    1.4921
+ 1.5849e-01   0.06009   0.14223    1.4406
+ 2.5119e-01   0.08745   0.14530    1.3699
+ 3.9811e-01   0.12524   0.16134    1.2754
+ 6.3096e-01   0.17505   0.19538    1.1543
+ 1.0000e+00   0.23671   0.24808    1.0078
+Ridge best lambda = 1.5849e-01 (grid index 16)
+w_ridge(best) = [ 0.00322, -0.96042,  0.10843,  1.00426,  0.10645, -0.26270, -0.01375, -0.04462, -0.09415,  0.20320]
+
+method    best lambda  test RMSE   ||w||_2  #|w_j|<0.01  indices
+Lasso      1.0000e-01   0.098544    1.4667            4  [0, 6, 8, 9]
+Ridge      1.5849e-01   0.142233    1.4406            1  [0]
+
+Deliverable 7: discussion
+-------------------------
+The coefficient path (p3_3_coefficient_path.png) shows the L1 penalty driving coefficients into the '~0' band one after another -- 0 ~0 coefficient(s) at lambda = 1e-4, 4 at lambda*, and 8 at lambda = 1 -- whereas at their best lambda Ridge has 1 coefficient(s) with |w_j| < 0.01 against 4 for Lasso (Deliverable 5 table). This follows from the optimality conditions: the L1 subgradient at w_j = 0 is the whole interval [-lambda, lambda], so w_j = 0 is optimal whenever |Phi_j^T r| <= lambda, i.e. once a feature's correlation with the residual falls below lambda the coefficient is held at exactly zero (the SSE contours touch the l1 diamond at a corner on an axis); the L2 penalty's gradient lambda w_j vanishes at w_j = 0, so it only rescales each coefficient towards zero along the circular ball and never sets it exactly to zero. As lambda grows past lambda* = 1.00e-01, more coefficients are removed and the rest are shrunk, so train RMSE rises monotonically (from 0.075 to 0.346 at lambda = 1) and test RMSE also rises (from 0.099 to 0.348): the model moves from a good fit into underfitting, with both errors climbing well above the 0.1 noise level.
+
+
+
+P4: Bayesian Regression - MAP/Ridge Equivalence and Effect of N
+===============================================================
+VAR = 0.01, beta = 100, alpha = 0.05, lambda = alpha/beta = 0.0005, degree = 3, grid = 200 points on [0, 1]
+
+Deliverable 1: predictive distribution, p4_train_N10.csv
+--------------------------------------------------------
+m_N = [ 9.383688e-02,  7.367889e+00, -2.280935e+01,  1.524700e+01]
+S_N =
+    7.532116e-03  -4.689794e-02   8.194146e-02  -4.289319e-02
+   -4.689794e-02   5.400794e-01  -1.212918e+00   7.330609e-01
+    8.194146e-02  -1.212918e+00   3.038445e+00  -1.960449e+00
+   -4.289319e-02   7.330609e-01  -1.960449e+00   1.318149e+00
+predictive std s(x): min = 0.11078, max = 0.13377; 95% band half-width 1.96 s(x): min = 0.21713, max = 0.26219
+
+Deliverable 2: MAP / ridge equivalence
+--------------------------------------
+w_MAP = [ 9.383688e-02,  7.367889e+00, -2.280935e+01,  1.524700e+01]
+||w_MAP - m_N||_2 = 1.1276e-12
+max_x |w_MAP^T phi(x) - m(x)| over the grid = 3.4750e-14
+Both are the same vector analytically: beta (alpha I + beta Phi^T Phi)^{-1} Phi^T t = (Phi^T Phi + (alpha/beta) I)^{-1} Phi^T t; the difference is floating-point round-off.
+
+Deliverable 3: predictive interval width 2 * 1.96 * s(x) vs N
+-------------------------------------------------------------
+Irreducible-noise floor 2 * 1.96 * beta^(-1/2) = 0.39200
+   N  min width  mean width  max width  mean param var  mean width - floor
+   5    0.47691     0.49519    0.54942    5.968442e-03             0.10319
+  10    0.43426     0.44908    0.52438    3.143484e-03             0.05708
+  20    0.41346     0.42418    0.48634    1.723240e-03             0.03218
+  50    0.40071     0.40638    0.44167    7.514819e-04             0.01438
+
+Deliverable 4: discussion
+-------------------------
+Each new observation adds beta phi(x_n) phi(x_n)^T to the posterior precision S_N^{-1} = alpha I + beta Phi^T Phi, so with more data the precision grows (roughly in proportion to N) and the posterior covariance S_N shrinks; the parameter-uncertainty term phi(x)^T S_N phi(x) therefore falls towards zero, which is why the band in p4_3_width_vs_N.png narrows from a mean width of 0.495 at N = 5 to 0.406 at N = 50 (and is widest where data are sparse, near the ends of [0, 1]). The observation-noise term beta^{-1} does not depend on the data at all -- it is the variance of the noise on a new target -- so the width can only approach the floor 2 x 1.96 x beta^(-1/2) = 0.392, never go below it, however large N becomes.

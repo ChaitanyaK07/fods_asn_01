@@ -65,3 +65,7 @@ w_GD [Stochastic GD] = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+
 Stochastic GD          ||w_GD - w_closed||_2 = 2.128341e-06,  relative = 1.949416e-11
 w_GD [Mini-batch GD (for b=3)] = [ 1.690526e-01,  2.126863e+01, -4.135343e+02,  3.787992e+03, -1.758851e+04,  4.560565e+04, -6.940945e+04,  6.160985e+04, -2.946919e+04,  5.855811e+03]
 Mini-batch GD (for b=3) ||w_GD - w_closed||_2 = 2.128680e-06,  relative = 1.949727e-11
+
+observations: 
+--------------
+in the figure, stochastic and batch gd converge almost the same until a level, whereas mini-batch gd converged slowly occurs because the rows of the orthogonal matrix (Q) have equal norms and are mutually orthogonal so each sample touches an independent direction, causing each SGD update to produce the same effect as the corresponding Batch GD updatebut, in mini-batch gd, it averaged the update, therefore the convergence in slow.

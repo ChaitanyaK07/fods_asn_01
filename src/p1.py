@@ -218,8 +218,8 @@ def run(out_dir = OUTPUT_DIR/"P1"):
     #deliverable 6: comments
 
     rep.section(f"observations: ")
-    rep.line("in the figure, stochastic and batch gd converge almost the same until a level, whereas mini-batch gd converged slowly" \
-    "occurs because the rows of the orthogonal matrix (Q) have equal norms and are mutually orthogonal, causing each SGD update to produce the same effect as the corresponding Batch GD update"
+    rep.line("in the figure, stochastic and batch gd converge almost the same until a level, whereas mini-batch gd converged slowly" 
+    " occurs because the rows of the orthogonal matrix (Q) have equal norms and are mutually orthogonal so each sample touches an independent direction, causing each SGD update to produce the same effect as the corresponding Batch GD update"
     "but, in mini-batch gd, it averaged the update, therefore the convergence in slow.")
 
 

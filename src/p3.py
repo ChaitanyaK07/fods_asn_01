@@ -222,8 +222,8 @@ def run(output_dir = OUTPUT_DIR/"P3"):
     i_big = LAMS.size - 1
     rep.line(
             "The coefficient path (p3_3_coefficient_path.png) shows the L1 penalty driving coefficients "
-            f"into the '~0' band one after another -- {nzero[0]} ~0 coefficient(s) at lambda = 1e-4, "
-            f"{z_star.size} at lambda*, and {nzero[i_big]} at lambda = 1 -- whereas at their best lambda "
+            f"into the '~0' band one after another  {nzero[0]} ~0 coefficient(s) at lambda = 1e-4, "
+            f"{z_star.size} at lambda*, and {nzero[i_big]} at lambda = 1 , whereas at their best lambda "
             f"Ridge has {ridge_small} coefficient(s) with |w_j| < 0.01 against {lasso_small} for Lasso "
             "(Deliverable 5 table). This follows from the optimality conditions: the L1 subgradient at "
             "w_j = 0 is the whole interval [-lambda, lambda], so w_j = 0 is optimal whenever "
