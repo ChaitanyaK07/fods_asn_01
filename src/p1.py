@@ -215,7 +215,15 @@ def run(out_dir = OUTPUT_DIR/"P1"):
         rep.array(f"w_GD [{name}]", w_gd)
         rep.line(f"{name:22s} ||w_GD - w_closed||_2 = {abs_err:.6e},  relative = {rel_err:.6e}")
 
-    
+    #deliverable 6: comments
+
+    rep.section(f"observations: ")
+    rep.line("in the figure, stochastic and batch gd converge almost the same until a level, whereas mini-batch gd converged slowly" \
+    "occurs because the rows of the orthogonal matrix (Q) have equal norms and are mutually orthogonal, causing each SGD update to produce the same effect as the corresponding Batch GD update"
+    "but, in mini-batch gd, it averaged the update, therefore the convergence in slow.")
+
+
+
     rep.save()
 
 
